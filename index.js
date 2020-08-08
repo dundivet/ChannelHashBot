@@ -26,9 +26,9 @@ const db = {
 
 bot.catch(console.error);
 
-bot.use((ctx, next) => {
+/*bot.use((ctx, next) => {
     if (!ctx.from || ctx.from.id !== 777000) next();
-});
+});*/
 
 require(`./handlers`)(bot, db);
 
