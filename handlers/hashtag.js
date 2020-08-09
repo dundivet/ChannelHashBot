@@ -153,45 +153,49 @@ module.exports = (bot, db) => {
 
         const { message, text, entities, tags } = getMessage(ctx);
 
-        db.groups.findOne({ chat_id: ctx.chat.id }, async (err, chat) => {
-            if (err) return console.error(err);
-            if (!chat || !chat.tags) return;
+        db.whitelist.findOne({ chat_id: ctx.chat.id }, async (err, chat) => {
+            if (chat === null) return;
 
-            const sentChannels = [];
-
-            for (const tag of tags) {
-                if (!chat.tags[tag]) {
-                    continue;
-                }
-
-                // Convert to array for backwards compatibility
-                if (!Array.isArray(chat.tags[tag])) {
-                    chat.tags[tag] = [chat.tags[tag]];
-                }
-
-                for (const channel of chat.tags[tag]) {
-                    if (sentChannels.includes(channel)) {
+            db.groups.findOne({ chat_id: ctx.chat.id }, async (err, chat) => {
+                if (err) return console.error(err);
+                if (!chat || !chat.tags) return;
+    
+                const sentChannels = [];
+    
+                for (const tag of tags) {
+                    if (!chat.tags[tag]) {
                         continue;
                     }
-
-                    const sentMessage = await sendMessage(
-                        ctx,
-                        chat,
-                        channel,
-                        message,
-                        text,
-                        entities,
-                    );
-
-                    sentChannels.push(channel);
-                    db.messages.insert({
-                        chat_id: ctx.chat.id,
-                        message_id: message.message_id,
-                        channel_id: channel,
-                        channel_message_id: sentMessage.message_id,
-                    });
+    
+                    // Convert to array for backwards compatibility
+                    if (!Array.isArray(chat.tags[tag])) {
+                        chat.tags[tag] = [chat.tags[tag]];
+                    }
+    
+                    for (const channel of chat.tags[tag]) {
+                        if (sentChannels.includes(channel)) {
+                            continue;
+                        }
+    
+                        const sentMessage = await sendMessage(
+                            ctx,
+                            chat,
+                            channel,
+                            message,
+                            text,
+                            entities,
+                        );
+    
+                        sentChannels.push(channel);
+                        db.messages.insert({
+                            chat_id: ctx.chat.id,
+                            message_id: message.message_id,
+                            channel_id: channel,
+                            channel_message_id: sentMessage.message_id,
+                        });
+                    }
                 }
-            }
+            });
         });
     };
 

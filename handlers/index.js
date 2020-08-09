@@ -8,6 +8,7 @@ const handlers = [
     `tags`,
     `hashtag`,
     `likes`,
+    `whitelist`,
 ];
 
 module.exports = (bot, db) =>

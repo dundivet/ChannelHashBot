@@ -1,3 +1,5 @@
+'use strict';
+
 require(`dotenv`).config();
 
 const path = require(`path`);
@@ -22,12 +24,24 @@ const db = {
         filename: path.join(__dirname, `stores/likes.db`),
         autoload: true,
     }),
+    whitelist: new NeDB({
+        filename: path.join(__dirname, `stores/whitelist.db`),
+        autoload: true,
+    }),
+    blacklist: new NeDB({
+        filename: path.join(__dirname, `stores/blacklist.db`),
+        autoload: true,
+    }),
 };
 
 bot.catch(console.error);
 
 /*bot.use((ctx, next) => {
-    if (!ctx.from || ctx.from.id !== 777000) next();
+    if (ctx.chat.id === -1001481823760) {
+        next();
+    }
+
+    //console.log(ctx.message);
 });*/
 
 require(`./handlers`)(bot, db);

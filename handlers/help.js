@@ -12,7 +12,7 @@ const help = `
 const setup = `
 <b>To set up a channel:</b>
 1. Add me to a channel
-2. Send <code>@ChannelHashBot</code> to your channel
+2. Send <code>@tuenvio_channelhash_bot</code> to your channel
 
 <b>To set up a group:</b>
 1. Add me to a group
