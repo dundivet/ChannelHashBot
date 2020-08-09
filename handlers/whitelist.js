@@ -54,8 +54,15 @@ module.exports = (bot, db) => {
             }
         } else {
             db.whitelist.find({}, async (err, docs) => {
-                const groups = docs.map(g => g.title).join(`, `);
-                ctx.reply(`<b>Grupos en lista blanca:</b> ${groups}`, { parse_mode: `html` });
+                let msg = `<b>Grupos en lista blanca:</b>
+`;
+
+                for (const g of docs) {
+                    msg = msg + `<a href="https://t.me/${g.username}">${g.title}</a>
+`;
+                }
+
+                ctx.reply(msg, { parse_mode: `html`, disable_web_page_preview: true });
             });
         }
     });
